@@ -23,10 +23,10 @@
 - Provides side-by-side comparisons: **Claim vs Verified Data**
 - Includes:
   - Links to verified sources
-  - Visual credibility indicators (color-coded risk levels: 🟢 Green, 🟡 Yellow, 🔴 Red)
+  - Visual credibility indicators 
 
 ### 🤖 Chat Bot
-- Tracks the origin and spread of claims.
+- Allows users to ask questions about a claim's validity, source credibility, and spread pattern.
 - Exposes manipulated trends and fake campaigns through conversational interaction.
 
 ### 🌐 Browser Extension
@@ -35,15 +35,6 @@
 
 ---
 
-## ⚙️ Installation & Setup
-
 ### Prerequisites
 - Python 3.x
 - Chrome (for the browser extension)
-
-### Steps to Run Locally
-
-1. **Clone the Repository**
-   ```bash
-   git clone https://github.com/your-username/TruthLens.git
-   cd TruthLens
