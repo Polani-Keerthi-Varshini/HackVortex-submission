@@ -1,0 +1,382 @@
+/* TruthLens Custom Styles - Two Color Theme */
+
+:root {
+    --truthlens-blue: #1f77b4;
+    --truthlens-light: #e8f2ff;
+    --truthlens-dark-blue: #1f77b4;
+    --truthlens-white: #ffffff;
+    --truthlens-gray: #f5f7fa;
+    --truthlens-text-dark: #2c3e50;
+    --truthlens-text-light: #ffffff;
+}
+
+/* Body and general styling */
+body {
+    background-color: var(--truthlens-light);
+    color: var(--truthlens-text-dark);
+}
+
+/* Custom navbar styling */
+.navbar {
+    background-color: var(--truthlens-blue) !important;
+    border-bottom: 3px solid var(--truthlens-dark-blue);
+}
+
+.navbar-brand {
+    font-weight: bold;
+    font-size: 1.5rem;
+    color: var(--truthlens-white) !important;
+}
+
+.navbar-brand i {
+    color: var(--truthlens-white);
+}
+
+.navbar-nav .nav-link {
+    color: var(--truthlens-white) !important;
+    font-weight: 500;
+}
+
+.navbar-nav .nav-link:hover {
+    color: var(--truthlens-light) !important;
+}
+
+.navbar-toggler {
+    border-color: var(--truthlens-white);
+}
+
+/* Card enhancements */
+.card {
+    background-color: var(--truthlens-white);
+    border: 2px solid var(--truthlens-blue);
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(74, 144, 226, 0.1);
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    box-shadow: 0 8px 15px rgba(74, 144, 226, 0.2);
+    transform: translateY(-2px);
+}
+
+.card-header {
+    background-color: var(--truthlens-blue);
+    color: var(--truthlens-white);
+    border-bottom: 2px solid var(--truthlens-dark-blue);
+    font-weight: 600;
+}
+
+/* Progress bar animations */
+.progress {
+    background-color: var(--truthlens-light);
+}
+
+.progress-bar {
+    background-color: var(--truthlens-blue);
+    transition: width 0.6s ease;
+}
+
+/* All status indicators use blue tones */
+.risk-low, .credibility-high, .status-verified {
+    color: var(--truthlens-blue);
+    border-color: var(--truthlens-blue);
+}
+
+.risk-medium, .credibility-medium, .status-mixed {
+    color: var(--truthlens-dark-blue);
+    border-color: var(--truthlens-dark-blue);
+}
+
+.risk-high, .credibility-low, .status-false {
+    color: var(--truthlens-text-dark);
+    border-color: var(--truthlens-text-dark);
+}
+
+/* Credibility score styling */
+.credibility-score {
+    font-size: 1.25rem;
+    font-weight: bold;
+}
+
+/* Status badges - all use blue theme */
+.badge {
+    font-weight: 600;
+}
+
+.bg-success, .status-verified {
+    background-color: var(--truthlens-blue) !important;
+    color: var(--truthlens-white) !important;
+}
+
+.bg-warning, .status-mixed {
+    background-color: var(--truthlens-dark-blue) !important;
+    color: var(--truthlens-white) !important;
+}
+
+.bg-danger, .status-false {
+    background-color: var(--truthlens-text-dark) !important;
+    color: var(--truthlens-white) !important;
+}
+
+.bg-info, .status-disputed {
+    background-color: var(--truthlens-blue) !important;
+    color: var(--truthlens-white) !important;
+}
+
+.bg-secondary {
+    background-color: var(--truthlens-gray) !important;
+    color: var(--truthlens-text-dark) !important;
+    border: 1px solid var(--truthlens-blue);
+}
+
+/* Table enhancements */
+.table-responsive {
+    border-radius: 0.375rem;
+}
+
+.table th {
+    border-top: none;
+    font-weight: 600;
+    color: var(--bs-secondary);
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Button enhancements */
+.btn {
+    border-radius: 6px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.btn-primary {
+    background-color: var(--truthlens-blue);
+    border-color: var(--truthlens-blue);
+    color: var(--truthlens-white);
+}
+
+.btn-primary:hover {
+    background-color: var(--truthlens-dark-blue);
+    border-color: var(--truthlens-dark-blue);
+    transform: translateY(-1px);
+}
+
+.btn-outline-secondary {
+    border-color: var(--truthlens-blue);
+    color: var(--truthlens-blue);
+}
+
+.btn-outline-secondary:hover {
+    background-color: var(--truthlens-blue);
+    color: var(--truthlens-white);
+}
+
+.btn-lg {
+    padding: 0.75rem 2rem;
+    font-size: 1.1rem;
+}
+
+/* Form enhancements */
+.form-control, .form-select {
+    border: 2px solid var(--truthlens-blue);
+    border-radius: 6px;
+    background-color: var(--truthlens-white);
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--truthlens-dark-blue);
+    box-shadow: 0 0 0 0.2rem rgba(74, 144, 226, 0.25);
+    background-color: var(--truthlens-white);
+}
+
+.form-label {
+    color: var(--truthlens-text-dark);
+    font-weight: 600;
+}
+
+/* Alert enhancements */
+.alert {
+    border-radius: 8px;
+    border: 2px solid;
+    font-weight: 500;
+}
+
+.alert-success {
+    background-color: var(--truthlens-light);
+    color: var(--truthlens-blue);
+    border-color: var(--truthlens-blue);
+}
+
+.alert-warning {
+    background-color: var(--truthlens-light);
+    color: var(--truthlens-dark-blue);
+    border-color: var(--truthlens-dark-blue);
+}
+
+.alert-danger {
+    background-color: var(--truthlens-light);
+    color: var(--truthlens-text-dark);
+    border-color: var(--truthlens-text-dark);
+}
+
+.alert-info {
+    background-color: var(--truthlens-light);
+    color: var(--truthlens-blue);
+    border-color: var(--truthlens-blue);
+}
+
+/* Chart containers */
+.chart-container {
+    position: relative;
+    height: 300px;
+    width: 100%;
+}
+
+/* Loading states */
+.loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.spinner-border-sm {
+    width: 1rem;
+    height: 1rem;
+}
+
+/* Footer styling */
+footer {
+    background-color: var(--truthlens-blue) !important;
+    border-top: 3px solid var(--truthlens-dark-blue);
+    color: var(--truthlens-white) !important;
+}
+
+footer a {
+    color: var(--truthlens-light) !important;
+}
+
+footer a:hover {
+    color: var(--truthlens-white) !important;
+    text-decoration: underline !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .navbar-brand {
+        font-size: 1.25rem;
+    }
+    
+    .display-4 {
+        font-size: 2rem;
+    }
+    
+    .btn-lg {
+        padding: 0.5rem 1rem;
+        font-size: 1rem;
+    }
+    
+    .card-body {
+        padding: 1rem;
+    }
+}
+
+/* Text truncation utility */
+.text-truncate-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.text-truncate-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* Custom scrollbar for webkit browsers */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bs-secondary-bg);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--bs-secondary);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--bs-secondary-color);
+}
+
+/* Animation utilities */
+.fade-in {
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.pulse {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+/* Light theme specific overrides */
+.container, .container-fluid {
+    background-color: transparent;
+}
+
+/* Icon colors */
+.text-primary {
+    color: var(--truthlens-blue) !important;
+}
+
+.text-success {
+    color: var(--truthlens-blue) !important;
+}
+
+.text-warning {
+    color: var(--truthlens-dark-blue) !important;
+}
+
+.text-danger {
+    color: var(--truthlens-text-dark) !important;
+}
+
+.text-info {
+    color: var(--truthlens-blue) !important;
+}
+
+.text-secondary {
+    color: var(--truthlens-text-dark) !important;
+}
+
+/* Additional blue theme elements */
+.border-primary {
+    border-color: var(--truthlens-blue) !important;
+}
+
+.border-success {
+    border-color: var(--truthlens-blue) !important;
+}
+
+.border-warning {
+    border-color: var(--truthlens-dark-blue) !important;
+}
+
+.border-danger {
+    border-color: var(--truthlens-text-dark) !important;
+}

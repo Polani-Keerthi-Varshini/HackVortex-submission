@@ -1,0 +1,305 @@
+{% extends "base.html" %}
+
+{% block title %}Evidence Dashboard - TruthLens{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h1 class="text-center mb-4">
+            <i class="fas fa-chart-bar text-primary me-2"></i>
+            Evidence Dashboard
+        </h1>
+        <p class="text-center text-muted mb-5">
+            Real-time overview of fact-checking activity and verification statistics.
+        </p>
+    </div>
+</div>
+
+<!-- Statistics Cards -->
+<div class="row mb-5">
+    <div class="col-md-6 col-lg-3 mb-3">
+        <div class="card text-center h-100">
+            <div class="card-body">
+                <i class="fas fa-list-ol fa-2x text-primary mb-3"></i>
+                <h3 class="card-title">{{ stats.total_claims }}</h3>
+                <p class="card-text text-muted">Total Claims</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6 col-lg-3 mb-3">
+        <div class="card text-center h-100">
+            <div class="card-body">
+                <i class="fas fa-check-circle fa-2x text-success mb-3"></i>
+                <h3 class="card-title">{{ stats.verified_claims }}</h3>
+                <p class="card-text text-muted">Verified Claims</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6 col-lg-3 mb-3">
+        <div class="card text-center h-100">
+            <div class="card-body">
+                <i class="fas fa-times-circle fa-2x text-danger mb-3"></i>
+                <h3 class="card-title">{{ stats.false_claims }}</h3>
+                <p class="card-text text-muted">False Claims</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6 col-lg-3 mb-3">
+        <div class="card text-center h-100">
+            <div class="card-body">
+                <i class="fas fa-percentage fa-2x text-info mb-3"></i>
+                <h3 class="card-title">{{ stats.accuracy_rate }}%</h3>
+                <p class="card-text text-muted">Accuracy Rate</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Verification Status Chart -->
+<div class="row mb-5">
+    <div class="col-lg-6 mb-4">
+        <div class="card h-100">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-pie-chart me-2"></i>Verification Status Distribution</h5>
+            </div>
+            <div class="card-body">
+                <canvas id="statusChart" width="400" height="300"></canvas>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-6 mb-4">
+        <div class="card h-100">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-tachometer-alt me-2"></i>Credibility Score Overview</h5>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span>High Credibility (7.5-10)</span>
+                        <span class="badge bg-success">{{ stats.verified_claims }}</span>
+                    </div>
+                    <div class="progress mb-3">
+                        <div class="progress-bar bg-success" style="width: {{ (stats.verified_claims / (stats.total_claims or 1)) * 100 }}%"></div>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span>Medium Credibility (4-7.4)</span>
+                        <span class="badge bg-warning">{{ stats.mixed_claims }}</span>
+                    </div>
+                    <div class="progress mb-3">
+                        <div class="progress-bar bg-warning" style="width: {{ (stats.mixed_claims / (stats.total_claims or 1)) * 100 }}%"></div>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span>Low Credibility (0-3.9)</span>
+                        <span class="badge bg-danger">{{ stats.false_claims }}</span>
+                    </div>
+                    <div class="progress">
+                        <div class="progress-bar bg-danger" style="width: {{ (stats.false_claims / (stats.total_claims or 1)) * 100 }}%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Claims -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-clock me-2"></i>Recent Claims</h5>
+            </div>
+            <div class="card-body">
+                {% if claims %}
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Claim</th>
+                                <th>Score</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for claim in claims %}
+                            <tr>
+                                <td>
+                                    <div class="text-truncate" style="max-width: 300px;" title="{{ claim.claim_text }}">
+                                        {{ claim.claim_text }}
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="badge bg-{{ 'success' if claim.credibility_score >= 6 else 'warning' if claim.credibility_score >= 4 else 'danger' }}">
+                                        {{ "%.1f"|format(claim.credibility_score) }}/10
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="badge bg-{{ 'success' if claim.status == 'verified' else 'warning' if claim.status == 'mixed' else 'info' if claim.status == 'disputed' else 'danger' }}">
+                                        <i class="fas fa-{{ 'check' if claim.status == 'verified' else 'question' if claim.status == 'mixed' else 'exclamation' if claim.status == 'disputed' else 'times' }} me-1"></i>
+                                        {{ claim.status|title }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <small class="text-muted">
+                                        {{ claim.created_at.strftime('%Y-%m-%d %H:%M') if claim.created_at else 'Unknown' }}
+                                    </small>
+                                </td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-primary" onclick="viewClaimDetails({{ claim.id }})">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-4">
+                    <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+                    <h5 class="text-muted">No Claims Yet</h5>
+                    <p class="text-muted">Start fact-checking claims to see them appear here.</p>
+                    <a href="{{ url_for('fact_check') }}" class="btn btn-primary">
+                        <i class="fas fa-plus me-2"></i>Submit First Claim
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Claim Details Modal -->
+<div class="modal fade" id="claimModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Claim Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="claimModalBody">
+                <!-- Content will be loaded here -->
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Status Chart
+const statusCtx = document.getElementById('statusChart').getContext('2d');
+new Chart(statusCtx, {
+    type: 'doughnut',
+    data: {
+        labels: ['Verified', 'Mixed', 'False'],
+        datasets: [{
+            data: [{{ stats.verified_claims }}, {{ stats.mixed_claims }}, {{ stats.false_claims }}],
+            backgroundColor: [
+                'rgba(25, 135, 84, 0.8)',
+                'rgba(255, 193, 7, 0.8)',
+                'rgba(220, 53, 69, 0.8)'
+            ],
+            borderColor: [
+                'rgba(25, 135, 84, 1)',
+                'rgba(255, 193, 7, 1)',
+                'rgba(220, 53, 69, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                position: 'bottom'
+            }
+        }
+    }
+});
+
+function viewClaimDetails(claimId) {
+    // Show loading in modal
+    document.getElementById('claimModalBody').innerHTML = `
+        <div class="text-center py-4">
+            <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-2">Loading claim details...</p>
+        </div>
+    `;
+    
+    // Show modal
+    const modal = new bootstrap.Modal(document.getElementById('claimModal'));
+    modal.show();
+    
+    // Fetch claim details
+    fetch(`/api/fact-check/${claimId}`)
+        .then(response => response.json())
+        .then(data => {
+            const sources = data.sources ? JSON.parse(data.sources) : [];
+            document.getElementById('claimModalBody').innerHTML = `
+                <div class="mb-3">
+                    <h6>Claim Text:</h6>
+                    <p class="border p-3 rounded bg-light text-dark">${data.claim_text}</p>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <h6>Credibility Score:</h6>
+                        <div class="progress mb-2" style="height: 25px;">
+                            <div class="progress-bar bg-${data.credibility_score >= 6 ? 'success' : data.credibility_score >= 4 ? 'warning' : 'danger'}" 
+                                 style="width: ${(data.credibility_score / 10) * 100}%">
+                                ${data.credibility_score.toFixed(1)}/10
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Status:</h6>
+                        <span class="badge bg-${data.status === 'verified' ? 'success' : data.status === 'mixed' ? 'warning' : data.status === 'disputed' ? 'info' : 'danger'} fs-6">
+                            ${data.status.charAt(0).toUpperCase() + data.status.slice(1)}
+                        </span>
+                    </div>
+                </div>
+                ${data.reasoning ? `
+                <div class="mb-3">
+                    <h6>AI Reasoning:</h6>
+                    <p>${data.reasoning}</p>
+                </div>
+                ` : ''}
+                ${sources.length > 0 ? `
+                <div class="mb-3">
+                    <h6>Sources:</h6>
+                    <div class="d-flex flex-wrap gap-2">
+                        ${sources.map(source => `<span class="badge bg-secondary">${source}</span>`).join('')}
+                    </div>
+                </div>
+                ` : ''}
+                <div class="row">
+                    <div class="col-md-6">
+                        <small class="text-muted">Created: ${new Date(data.created_at).toLocaleString()}</small>
+                    </div>
+                    <div class="col-md-6 text-end">
+                        <small class="text-muted">Updated: ${new Date(data.updated_at).toLocaleString()}</small>
+                    </div>
+                </div>
+            `;
+        })
+        .catch(error => {
+            document.getElementById('claimModalBody').innerHTML = `
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    Error loading claim details. Please try again.
+                </div>
+            `;
+        });
+}
+</script>
+{% endblock %}

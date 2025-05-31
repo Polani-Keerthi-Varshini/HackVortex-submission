@@ -1,0 +1,260 @@
+{% extends "base.html" %}
+
+{% block title %}Fact Check - TruthLens{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <h1 class="text-center mb-4">
+            <i class="fas fa-check-circle text-primary me-2"></i>
+            Fact Check Claims
+        </h1>
+        <p class="text-center text-muted mb-5">
+            Enter any claim, news article excerpt, or social media post to verify its accuracy.
+        </p>
+        
+        <!-- Fact Check Form -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-edit me-2"></i>Submit a Claim</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('fact_check') }}">
+                    <div class="mb-3">
+                        <label for="claim_text" class="form-label">Claim Text</label>
+                        <textarea class="form-control" id="claim_text" name="claim_text" rows="4" 
+                                placeholder="Paste the claim, article excerpt, or social media post you want to verify..."
+                                required>{{ claim if claim else '' }}</textarea>
+                        <div class="form-text">
+                            <i class="fas fa-info-circle me-1"></i>
+                            Enter any text you want to fact-check. Our AI will extract claims and verify them.
+                        </div>
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fas fa-search me-2"></i>Verify Claim
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Results Section -->
+        {% if results %}
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="fas fa-chart-bar me-2"></i>Verification Results</h5>
+                <span class="badge bg-{{ 'success' if results.risk_level == 'low' else 'warning' if results.risk_level == 'medium' else 'danger' }} fs-6">
+                    {{ results.risk_level|title }} Risk
+                </span>
+            </div>
+            <div class="card-body">
+                <!-- Credibility Score -->
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <h6><i class="fas fa-chart-pie me-2"></i>Credibility Score</h6>
+                        <div class="d-flex align-items-center">
+                            <div class="progress flex-grow-1 me-3" style="height: 25px;">
+                                <div class="progress-bar bg-{{ 'success' if results.credibility_score >= 6 else 'warning' if results.credibility_score >= 4 else 'danger' }}" 
+                                     role="progressbar" style="width: {{ (results.credibility_score / 10) * 100 }}%">
+                                    {{ "%.1f"|format(results.credibility_score) }}/10
+                                </div>
+                            </div>
+                            <strong class="text-{{ 'success' if results.credibility_score >= 6 else 'warning' if results.credibility_score >= 4 else 'danger' }}">
+                                {{ "%.1f"|format(results.credibility_score) }}
+                            </strong>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h6><i class="fas fa-tag me-2"></i>Status</h6>
+                        <span class="badge bg-{{ 'success' if results.status == 'verified' else 'warning' if results.status == 'mixed' else 'info' if results.status == 'disputed' else 'danger' }} fs-6">
+                            <i class="fas fa-{{ 'check' if results.status == 'verified' else 'question' if results.status == 'mixed' else 'exclamation' if results.status == 'disputed' else 'times' }} me-1"></i>
+                            {{ results.status|title }}
+                        </span>
+                    </div>
+                </div>
+                
+                <!-- Reasoning -->
+                <div class="mb-4">
+                    <h6><i class="fas fa-newspaper me-2"></i>Related Factual News</h6>
+                    <div class="card border-light">
+                        <div class="card-body py-3">
+                            <p class="card-text">{{ results.factual_news if results.factual_news else results.reasoning }}</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Sources -->
+                {% if results.sources %}
+                <div class="mb-4">
+                    <h6><i class="fas fa-link me-2"></i>Verification Sources</h6>
+                    <div class="d-flex flex-wrap gap-2">
+                        {% for source in results.sources %}
+                        <span class="badge bg-secondary">{{ source }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+                
+
+                
+                <!-- Category -->
+                <div class="mb-4">
+                    <h6><i class="fas fa-folder me-2"></i>Category</h6>
+                    <span class="badge bg-info">{{ results.category|title }}</span>
+                </div>
+            </div>
+        </div>
+
+        
+        <!-- Real Facts -->
+        {% if results.real_facts %}
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-lightbulb me-2"></i>Real Facts & Context</h5>
+            </div>
+            <div class="card-body">
+                {% for fact in results.real_facts %}
+                <div class="card border-light mb-3">
+                    <div class="card-body py-3">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div class="flex-grow-1">
+                                <h6 class="card-title mb-2">
+                                    <i class="fas fa-{{ 'check-circle' if fact.type == 'fact_check_finding' else 'info-circle' if fact.type == 'verification_context' else 'clipboard-check' }} me-2 text-primary"></i>
+                                    {{ fact.type|replace('_', ' ')|title }}
+                                </h6>
+                                <p class="card-text mb-2">{{ fact.content }}</p>
+                                <small class="text-muted">
+                                    <strong>Source:</strong> {{ fact.source }}
+                                    {% if fact.reliability %}
+                                    | <strong>Reliability:</strong> 
+                                    <span class="badge bg-{{ 'success' if fact.reliability == 'High' else 'warning' if fact.reliability == 'Medium' else 'secondary' }}">
+                                        {{ fact.reliability }}
+                                    </span>
+                                    {% endif %}
+                                </small>
+                            </div>
+                            {% if fact.url and fact.url != '' %}
+                            <div class="text-end">
+                                <a href="{{ fact.url }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                                    <i class="fas fa-external-link-alt"></i>
+                                </a>
+                            </div>
+                            {% endif %}
+                        </div>
+                        {% if fact.rating %}
+                        <div class="mt-2">
+                            <span class="badge bg-info">Rating: {{ fact.rating }}</span>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+        
+        <!-- Extracted Claims -->
+        {% if extracted_claims %}
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-list me-2"></i>Extracted Claims</h5>
+            </div>
+            <div class="card-body">
+                {% for claim in extracted_claims %}
+                <div class="card border-light mb-3">
+                    <div class="card-body py-2">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div class="flex-grow-1">
+                                <p class="mb-1">{{ claim.text }}</p>
+                                <small class="text-muted">
+                                    Type: {{ claim.type|replace('_', ' ')|title }} | 
+                                    Confidence: {{ "%.0f"|format(claim.confidence * 100) }}%
+                                    {% if claim.entities %}
+                                    | Entities: 
+                                    {% for entity in claim.entities[:3] %}
+                                        <span class="badge bg-secondary">{{ entity.text }} ({{ entity.label }})</span>
+                                    {% endfor %}
+                                    {% endif %}
+                                </small>
+                            </div>
+                            <div class="text-end">
+                                <div class="progress" style="width: 60px; height: 20px;">
+                                    <div class="progress-bar bg-{{ 'success' if claim.confidence >= 0.7 else 'warning' if claim.confidence >= 0.5 else 'danger' }}" 
+                                         style="width: {{ claim.confidence * 100 }}%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+        {% endif %}
+    </div>
+</div>
+
+<!-- Example Claims -->
+<div class="row mt-5">
+    <div class="col-12">
+        <h3 class="text-center mb-4">Example Claims to Try</h3>
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h6 class="card-title text-warning">
+                            <i class="fas fa-heartbeat me-2"></i>Health Claim
+                        </h6>
+                        <p class="card-text small">
+                            "A new study shows that drinking 8 glasses of water daily can prevent all diseases."
+                        </p>
+                        <button class="btn btn-sm btn-outline-secondary" onclick="fillExample(this.previousElementSibling.textContent)">
+                            Try This
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h6 class="card-title text-info">
+                            <i class="fas fa-chart-line me-2"></i>Statistical Claim
+                        </h6>
+                        <p class="card-text small">
+                            "According to recent data, 90% of climate scientists agree that climate change is real."
+                        </p>
+                        <button class="btn btn-sm btn-outline-secondary" onclick="fillExample(this.previousElementSibling.textContent)">
+                            Try This
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h6 class="card-title text-success">
+                            <i class="fas fa-newspaper me-2"></i>News Claim
+                        </h6>
+                        <p class="card-text small">
+                            "Breaking: Scientists discover new species in the Amazon rainforest last week."
+                        </p>
+                        <button class="btn btn-sm btn-outline-secondary" onclick="fillExample(this.previousElementSibling.textContent)">
+                            Try This
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function fillExample(text) {
+    document.getElementById('claim_text').value = text.trim();
+    document.getElementById('claim_text').focus();
+}
+</script>
+{% endblock %}

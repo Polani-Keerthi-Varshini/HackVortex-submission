@@ -1,0 +1,239 @@
+/* TruthLens Browser Extension - Content Styles */
+
+#truthlens-floating-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    background: #4a90e2;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10000;
+    box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3);
+    transition: all 0.3s ease;
+}
+
+#truthlens-floating-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 16px rgba(74, 144, 226, 0.4);
+}
+
+#truthlens-floating-btn.active {
+    background: #28a745;
+}
+
+.truthlens-highlight {
+    padding: 2px 4px;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.truthlens-highlight:hover {
+    opacity: 0.8;
+    transform: scale(1.02);
+}
+
+.truthlens-highlight.truthlens-high {
+    background-color: rgba(40, 167, 69, 0.2);
+    border-bottom: 2px solid #28a745;
+}
+
+.truthlens-highlight.truthlens-medium {
+    background-color: rgba(255, 193, 7, 0.2);
+    border-bottom: 2px solid #ffc107;
+}
+
+.truthlens-highlight.truthlens-low {
+    background-color: rgba(220, 53, 69, 0.2);
+    border-bottom: 2px solid #dc3545;
+}
+
+.truthlens-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10001;
+    animation: fadeIn 0.3s ease;
+}
+
+.truthlens-modal-content {
+    background: white;
+    border-radius: 8px;
+    max-width: 500px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    animation: slideIn 0.3s ease;
+}
+
+.truthlens-modal-header {
+    padding: 20px;
+    border-bottom: 1px solid #e9ecef;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.truthlens-modal-header h3 {
+    margin: 0;
+    color: #333;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.truthlens-close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #666;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.truthlens-close:hover {
+    color: #333;
+}
+
+.truthlens-modal-body {
+    padding: 20px;
+}
+
+.truthlens-score {
+    padding: 12px;
+    border-radius: 6px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    text-align: center;
+}
+
+.truthlens-score.high {
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.truthlens-score.medium {
+    background: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeaa7;
+}
+
+.truthlens-score.low {
+    background: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.truthlens-status {
+    font-weight: 500;
+    margin-bottom: 16px;
+    color: #495057;
+}
+
+.truthlens-reasoning {
+    margin-bottom: 16px;
+}
+
+.truthlens-reasoning strong {
+    color: #333;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.truthlens-reasoning p {
+    line-height: 1.5;
+    color: #495057;
+    margin: 0;
+}
+
+.truthlens-news {
+    background: #f8f9fa;
+    padding: 16px;
+    border-radius: 6px;
+    border-left: 4px solid #4a90e2;
+}
+
+.truthlens-news strong {
+    color: #333;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.truthlens-news p {
+    line-height: 1.5;
+    color: #495057;
+    margin: 0;
+}
+
+.truthlens-quick-btn {
+    position: absolute;
+    background: #4a90e2;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    z-index: 10000;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    transition: all 0.2s ease;
+}
+
+.truthlens-quick-btn:hover {
+    background: #357abd;
+    transform: translateY(-1px);
+}
+
+.truthlens-notification {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-100px);
+    background: #333;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 6px;
+    font-size: 14px;
+    z-index: 10002;
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+.truthlens-notification.show {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideIn {
+    from { 
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to { 
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
