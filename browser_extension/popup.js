@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const scoreDiv = document.querySelector('.score');
     const detailsDiv = document.querySelector('.details');
 
-    // Get API endpoint from storage or use default
+    // Get API endpoint from storage or use defaultt
     let apiEndpoint = 'https://edb45802-7c53-4151-8ab6-8345c51197d9-00-252w1l9x7npln.kirk.replit.dev/api/fact-check';
 
     // Verify we're in extension context

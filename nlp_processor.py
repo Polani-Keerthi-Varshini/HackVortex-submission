@@ -7,10 +7,8 @@ class NLPProcessor:
     
     def __init__(self):
         try:
-            # Try to load the English model
             self.nlp = spacy.load("en_core_web_sm")
         except OSError:
-            # If model is not available, create a blank model
             logging.warning("spaCy English model not found. Using blank model.")
             self.nlp = spacy.blank("en")
         
@@ -31,7 +29,6 @@ class NLPProcessor:
             doc = self.nlp(text)
             claims = []
             
-            # Split text into sentences
             sentences = [sent.text.strip() for sent in doc.sents]
             
             for i, sentence in enumerate(sentences):
@@ -39,7 +36,6 @@ class NLPProcessor:
                 if claim_info:
                     claims.append(claim_info)
             
-            # If no specific claims found, treat the entire text as a claim
             if not claims and text.strip():
                 claims.append({
                     'text': text.strip(),
@@ -67,16 +63,12 @@ class NLPProcessor:
         """Analyze a sentence to determine if it contains factual claims"""
         sentence_lower = sentence.lower()
         
-        # Check for claim indicators
         has_claim_indicator = any(indicator in sentence_lower for indicator in self.claim_indicators)
         
-        # Check for factual content
         has_factual_content = self._has_factual_content(sentence)
         
-        # Check for numbers or statistics
         has_numbers = any(char.isdigit() for char in sentence)
         
-        # Calculate confidence score
         confidence = 0.0
         if has_claim_indicator:
             confidence += 0.4
@@ -84,10 +76,9 @@ class NLPProcessor:
             confidence += 0.3
         if has_numbers:
             confidence += 0.2
-        if len(sentence.split()) > 10:  # Longer sentences might be more substantial
+        if len(sentence.split()) > 10:  
             confidence += 0.1
         
-        # Only return if confidence is above threshold
         if confidence >= 0.3:
             return {
                 'text': sentence.strip(),
@@ -146,14 +137,11 @@ class NLPProcessor:
         try:
             doc = self.nlp(text)
             
-            # Basic statistics
             word_count = len([token for token in doc if not token.is_space])
             sentence_count = len(list(doc.sents))
             
-            # Calculate readability indicators
             avg_sentence_length = word_count / max(sentence_count, 1)
             
-            # Check for various quality indicators
             has_proper_nouns = any(token.pos_ == "PROPN" for token in doc)
             has_numbers = any(token.like_num for token in doc)
             has_urls = any("http" in token.text.lower() or "www." in token.text.lower() for token in doc)
@@ -165,7 +153,7 @@ class NLPProcessor:
                 'has_proper_nouns': has_proper_nouns,
                 'has_numbers': has_numbers,
                 'has_urls': has_urls,
-                'complexity_score': min(avg_sentence_length / 15, 1.0)  # Normalized complexity
+                'complexity_score': min(avg_sentence_length / 15, 1.0)  
             }
             
         except Exception as e:
@@ -185,7 +173,6 @@ class NLPProcessor:
         try:
             doc = self.nlp(text)
             
-            # Extract meaningful tokens (excluding stop words, punctuation, spaces)
             keywords = []
             for token in doc:
                 if (not token.is_stop and 
@@ -195,7 +182,6 @@ class NLPProcessor:
                     token.pos_ in ['NOUN', 'PROPN', 'ADJ', 'VERB']):
                     keywords.append(token.lemma_.lower())
             
-            # Remove duplicates while preserving order
             seen = set()
             unique_keywords = []
             for keyword in keywords:
@@ -207,6 +193,5 @@ class NLPProcessor:
             
         except Exception as e:
             logging.error(f"Error extracting keywords: {str(e)}")
-            # Fallback to simple word extraction
             words = text.lower().split()
             return [word for word in words if len(word) > 3][:max_keywords]

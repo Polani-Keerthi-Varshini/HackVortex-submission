@@ -5,8 +5,8 @@ from fact_checker import FactChecker
 from nlp_processor import NLPProcessor
 import json
 import logging
-
-# Initialize components
+ 
+# Initialize component
 fact_checker = FactChecker()
 nlp_processor = NLPProcessor()
 

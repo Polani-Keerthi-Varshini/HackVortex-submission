@@ -7,8 +7,8 @@ class Claim(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     claim_text = db.Column(Text, nullable=False)
     credibility_score = db.Column(Float, default=0.0)
-    status = db.Column(String(20), default='pending')  # pending, verified, false, mixed
-    sources = db.Column(Text)  # JSON string of sources
+    status = db.Column(String(20), default='pending')  
+    sources = db.Column(Text)  
     reasoning = db.Column(Text)
     created_at = db.Column(DateTime, default=datetime.utcnow)
     updated_at = db.Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
@@ -31,7 +31,7 @@ class Report(db.Model):
     content_text = db.Column(Text, nullable=False)
     content_url = db.Column(String(500))
     reporter_email = db.Column(String(120))
-    category = db.Column(String(50))  # health, politics, finance, etc.
+    category = db.Column(String(50))  # e.g., health, politics, environment
     priority = db.Column(String(20), default='medium')  # low, medium, high
     status = db.Column(String(20), default='pending')  # pending, reviewed, verified, dismissed
     notes = db.Column(Text)
@@ -72,7 +72,7 @@ class GeographicData(db.Model):
     """Model for tracking misinformation by geographic location"""
     id = db.Column(db.Integer, primary_key=True)
     country = db.Column(String(100), nullable=False)
-    region = db.Column(String(100))  # State/Province
+    region = db.Column(String(100))  
     city = db.Column(String(100))
     latitude = db.Column(Float)
     longitude = db.Column(Float)

@@ -296,7 +296,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Add loading state to forms
+    // Add loading state to form
     document.querySelectorAll('form').forEach(form => {
         form.addEventListener('submit', function() {
             const submitBtn = form.querySelector('button[type="submit"]');

@@ -272,7 +272,7 @@
     margin: 20px 0;
 }
 
-/* Mobile responsiveness */
+/* Mobile responsiveness*/
 @media (max-width: 768px) {
     .chatbot-window {
         width: 320px;

@@ -260,7 +260,7 @@ ${factualNews}`;
     }
 
     formatMessage(text) {
-        // Convert markdown-style formatting to HTML
+        // Convert markdown-style formatting to HTML doc
         return text
             .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
             .replace(/\*(.*?)\*/g, '<em>$1</em>')

@@ -16,28 +16,13 @@ class FactChecker:
         Verify a claim using multiple sources and return credibility assessment
         """
         try:
-            # Get external fact-check results
             external_results = self._search_external_factchecks(claim_text)
-            
-            # Analyze claim using internal logic
             internal_analysis = self._analyze_claim_internally(claim_text)
-            
-            # Get detailed analysis factors
             analysis_factors = self._get_analysis_factors(external_results, internal_analysis, claim_text)
-            
-            # Combine results and calculate credibility score
             credibility_score = self._calculate_credibility_score(external_results, internal_analysis)
-            
-            # Determine status based on score and claim content
             status = self._determine_status(credibility_score, claim_text)
-            
-            # Extract category
             category = self._extract_category(claim_text)
-            
-            # Get real facts about the claim
             real_facts = self._get_real_facts(claim_text, external_results)
-            
-            # Generate factual news content about the claim
             factual_news = self._generate_factual_news(claim_text, external_results, credibility_score)
             
             return {
@@ -76,7 +61,6 @@ class FactChecker:
             }
             
             if self.google_api_key == 'demo-key':
-                # Return mock data when API key is not available
                 return self._get_demo_factcheck_data(claim_text)
             
             response = requests.get(self.fact_check_url, params=params, timeout=10)
@@ -96,7 +80,6 @@ class FactChecker:
         """Generate demo fact-check data when API is not available"""
         claim_lower = claim_text.lower()
         
-        # Simple keyword-based demo responses
         if any(word in claim_lower for word in ['vaccine', 'covid', 'coronavirus']):
             return {
                 'claims': [
@@ -161,12 +144,12 @@ class FactChecker:
     def _analyze_claim_internally(self, claim_text: str) -> Dict[str, Any]:
         """Perform internal analysis of the claim"""
         analysis = {
-            'claim_text': claim_text,  # Include claim text for dynamic scoring
+            'claim_text': claim_text,  
             'word_count': len(claim_text.split()),
             'has_extreme_language': self._has_extreme_language(claim_text),
             'has_numbers': any(char.isdigit() for char in claim_text),
             'has_urls': 'http' in claim_text.lower() or 'www.' in claim_text.lower(),
-            'length_score': min(len(claim_text) / 100, 1.0)  # Longer claims might be more detailed
+            'length_score': min(len(claim_text) / 100, 1.0)  
         }
         
         return analysis
@@ -185,7 +168,6 @@ class FactChecker:
         """Calculate overall credibility score from 0.0 to 10.0 based on claim content"""
         claim_text = internal_analysis.get('claim_text', '').lower()
         
-        # Dynamic scoring based on claim characteristics
         if any(word in claim_text for word in ['all diseases', 'prevent all', 'cure everything', 'never fails']):
             score = 3.2  # Overly broad medical claims
         elif any(word in claim_text for word in ['study shows', 'research proves', 'scientists say']):
@@ -221,7 +203,6 @@ class FactChecker:
         else:
             score = 5.8  # Default for general claims
         
-        # Adjust based on external fact-checks
         external_claims = external_results.get('claims', [])
         if external_claims:
             ratings = [claim.get('rating', '').lower() for claim in external_claims]
